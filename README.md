@@ -34,26 +34,30 @@ LapCloud brings together specialized open-source applications in one modular env
 
 ### Core
 
-| Application | Description |
-|---|---|
-| [Authentik](https://goauthentik.io/) | Identity management and Single Sign-On (SSO) |
+| Application | Description | Address |
+|---|---|---|
+| [Caddy](https://caddyserver.com/) | Reverse proxy: gives each app a friendly name | none (it is the entry point) |
+| [Postgres](https://www.postgresql.org/) | Shared database for Authentik and PeerTube | internal only |
+| [Authentik](https://goauthentik.io/) | Identity management and Single Sign-On (SSO) | `http://auth.lapcloud.lan` |
 
 ### Media & Entertainment
 
-| Application | Description |
-|---|---|
-| [Immich](https://immich.app/) | Self-hosted photo and video management |
-| [Jellyfin](https://jellyfin.org/) | Movies, TV shows and media streaming |
-| [PeerTube](https://joinpeertube.org/) | Decentralized video hosting and sharing |
-| [Audiobookshelf](https://www.audiobookshelf.org/) | Audiobooks and podcast management |
-| [Kavita](https://www.kavitareader.com/) | Ebooks, manga, comics and reading |
-| [Navidrome](https://www.navidrome.org/) | Personal music streaming server |
+| Application | Description | Address |
+|---|---|---|
+| [Immich](https://immich.app/) | Self-hosted photo and video management | `http://photos.lapcloud.lan` |
+| [Jellyfin](https://jellyfin.org/) | Movies, TV shows and media streaming | `http://jellyfin.lapcloud.lan` |
+| [PeerTube](https://joinpeertube.org/) | Video hosting and sharing | `http://videos.lapcloud.lan` |
+| [Audiobookshelf](https://www.audiobookshelf.org/) | Audiobooks and podcast management | `http://audiobooks.lapcloud.lan` |
+| [Kavita](https://www.kavitareader.com/) | Ebooks, manga, comics and reading | `http://books.lapcloud.lan` |
+| [Navidrome](https://www.navidrome.org/) | Personal music streaming server | `http://music.lapcloud.lan` |
 
 ### Gaming
 
-| Application | Description |
-|---|---|
-| [Veloren](https://veloren.net/) | Open-source multiplayer voxel RPG with third-person gameplay |
+| Application | Description | Address |
+|---|---|---|
+| [Veloren](https://veloren.net/) | Open-source multiplayer voxel RPG with third-person gameplay | `<machine-ip>:14004` (game client) |
+
+The `lapcloud.lan` base name can be changed. See [docs/local-names.md](docs/local-names.md).
 
 ## Supported Hardware
 
@@ -69,51 +73,46 @@ LapCloud follows a **Laptop First** approach, but is designed to expand beyond l
 
 Hardware and CPU architecture compatibility depends on the individual application.
 
+**Tested so far:** an x86-64 laptop running Debian. Raspberry Pi, other ARM boards, mini PCs and desktops are not tested yet.
+
 ## Repository Structure
 
 ```text
 LapCloud/
 │
 ├── core/
-│   ├── postgres/
-│   │   ├── compose.yaml
-│   │   └── .env.example
-│   └── authentik/
-│       ├── compose.yaml
-│       ├── .env.example
-│       └── create-db.sh
+│   ├── postgres/         shared database
+│   ├── caddy/            reverse proxy (one file per app in sites/)
+│   └── authentik/        identity and SSO
 │
-├── media/            (planned, not created yet)
-│   ├── immich/
-│   │   └── compose.yaml
+├── media/
+│   ├── immich/           (has its own Postgres)
 │   ├── jellyfin/
-│   │   └── compose.yaml
 │   ├── peertube/
-│   │   └── compose.yaml
 │   ├── audiobookshelf/
-│   │   └── compose.yaml
 │   ├── kavita/
-│   │   └── compose.yaml
 │   └── navidrome/
-│       └── compose.yaml
 │
-├── gaming/           (planned, not created yet)
+├── gaming/
 │   └── veloren/
-│       └── compose.yaml
+│
+├── docs/
+│   ├── install-laptop.md
+│   ├── local-names.md
+│   └── backup-restore.md
 │
 ├── LICENSE
 └── README.md
 ```
 
-Each application has its own Docker Compose configuration, allowing users to deploy, update and maintain services independently.
+Every application folder has the same pieces:
 
-Each application also has its own `.env.example`. To configure an app, go to its folder, copy it to `.env` and edit the values:
+- `compose.yaml`: the Docker Compose configuration.
+- `.env.example`: the settings. Copy it to `.env` and edit the values.
+- `data/`: created on first start. It holds the app's files and is ignored by git.
+- `create-db.sh`: only for apps that use the shared Postgres (Authentik, PeerTube).
 
-```bash
-cp .env.example .env
-```
-
-The real `.env` files are ignored by git, so your passwords and keys are never committed. Folders marked as planned will follow the same pattern when they are added.
+Each application has its own Docker Compose configuration, so you can deploy, update and maintain services independently. The real `.env` files are ignored by git, so your passwords and keys are never committed.
 
 ## Getting Started
 
@@ -121,32 +120,38 @@ The real `.env` files are ignored by git, so your passwords and keys are never c
 
 - A laptop, desktop or compatible home machine.
 - Debian recommended.
-- Docker Engine.
-- Docker Compose plugin.
+- Docker Engine and the Docker Compose plugin.
 - Available storage for application data and personal media.
 
-### Installation
+New to this? Follow the step-by-step guide: **[docs/install-laptop.md](docs/install-laptop.md)**.
 
-**1. Clone the repository**
+### Quick start
+
+**1. Clone the repository and create the shared network (once)**
 
 ```bash
 git clone https://github.com/mongosaraiva/LapCloud.git
 cd LapCloud
-```
-
-**2. Create the shared network (once)**
-
-```bash
 docker network create lapcloud
 ```
 
-**3. Start the shared database**
+**2. Start the shared database**
 
 ```bash
 cd core/postgres
 cp .env.example .env    # then edit .env and set a strong password
 docker compose up -d
 ```
+
+**3. Start Caddy (the proxy)**
+
+```bash
+cd ../caddy
+cp .env.example .env
+docker compose up -d
+```
+
+Then make the names work on your devices: [docs/local-names.md](docs/local-names.md).
 
 **4. Start Authentik**
 
@@ -157,11 +162,21 @@ cp .env.example .env    # then edit .env and set the secret key and password
 docker compose up -d
 ```
 
-Open `http://<your-ip>:9000/if/flow/initial-setup/` to create the admin user.
+Open `http://auth.lapcloud.lan/if/flow/initial-setup/` to create the admin user.
 
-Repeat for any other application you want to deploy.
+**5. Start the apps you want**
 
-*Installation instructions and configuration examples will be documented individually for each service.*
+```bash
+cd ../../media/jellyfin
+cp .env.example .env    # then edit .env (for example MEDIA_DIR)
+docker compose up -d
+```
+
+Repeat for any other application. The table in [docs/install-laptop.md](docs/install-laptop.md) lists the extra step each app needs.
+
+### Backup
+
+See [docs/backup-restore.md](docs/backup-restore.md).
 
 ## Design Principles
 
@@ -175,17 +190,18 @@ Repeat for any other application you want to deploy.
 ## Roadmap
 
 - [X] Establish the core repository structure.
-- [ ] Prepare Docker Compose configurations.
-- [ ] Implement persistent storage and volume management.
-- [ ] Deploy Authentik for centralized identity.
-- [ ] Integrate Immich and Jellyfin.
-- [ ] Integrate PeerTube.
-- [ ] Integrate Audiobookshelf, Kavita and Navidrome.
-- [ ] Add Veloren dedicated server.
-- [ ] Document laptop installation.
+- [X] Prepare Docker Compose configurations.
+- [X] Implement persistent storage and volume management.
+- [X] Deploy Authentik for centralized identity.
+- [X] Integrate Immich and Jellyfin.
+- [X] Integrate PeerTube.
+- [X] Integrate Audiobookshelf, Kavita and Navidrome.
+- [X] Add Veloren dedicated server.
+- [X] Document laptop installation.
+- [ ] Document Single Sign-On (SSO) setup for each app.
 - [ ] Test Raspberry Pi and other ARM-based SBC deployments.
 - [ ] Validate desktop and mini PC deployments.
-- [ ] Document backup and restore procedures.
+- [X] Document backup and restore procedures.
 - [ ] Improve security and resource optimization.
 
 ## Contributing

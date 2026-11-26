@@ -11,3 +11,6 @@ certs/
 # Editor and OS files
 .DS_Store
 *.swp
+
+# Backups you create with docs/backup-restore.md
+backups/
