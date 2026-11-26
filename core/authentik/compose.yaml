@@ -1,0 +1,46 @@
+# Authentik (identity and SSO). Uses the shared Postgres in core/postgres.
+# Start Postgres first, then run ./create-db.sh once, then: docker compose up -d
+
+services:
+  server:
+    image: ghcr.io/goauthentik/server:${AUTHENTIK_TAG:-2026.8.3}
+    container_name: lapcloud-authentik-server
+    command: server
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "${COMPOSE_PORT_HTTP:-9000}:9000"
+      - "${COMPOSE_PORT_HTTPS:-9443}:9443"
+    volumes:
+      - ./data:/data
+      - ./custom-templates:/templates
+    networks:
+      - lapcloud
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  worker:
+    image: ghcr.io/goauthentik/server:${AUTHENTIK_TAG:-2026.8.3}
+    container_name: lapcloud-authentik-worker
+    command: worker
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data:/data
+      - ./certs:/certs
+      - ./custom-templates:/templates
+      - ./blueprints:/blueprints/custom
+    networks:
+      - lapcloud
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  lapcloud:
+    external: true

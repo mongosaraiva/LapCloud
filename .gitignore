@@ -1,0 +1,13 @@
+# Secrets: never commit real values
+.env
+**/.env
+
+# Persistent data created by the containers
+data/
+**/data/
+certs/
+**/certs/
+
+# Editor and OS files
+.DS_Store
+*.swp

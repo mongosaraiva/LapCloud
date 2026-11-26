@@ -1,0 +1,35 @@
+# Shared PostgreSQL for LapCloud apps (Authentik, Immich, ...).
+# Create the shared network once:  docker network create lapcloud
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: lapcloud-postgres
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+    ports:
+      # Only reachable from this machine. Other containers use the network.
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      # Postgres 18+ stores data under /var/lib/postgresql/<version>/docker
+      - ./data:/var/lib/postgresql
+    shm_size: 256mb
+    networks:
+      - lapcloud
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  lapcloud:
+    external: true
