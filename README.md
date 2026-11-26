@@ -202,8 +202,8 @@ See [docs/backup-restore.md](docs/backup-restore.md).
 - [X] Integrate Audiobookshelf, Kavita and Navidrome.
 - [X] Add Veloren dedicated server.
 - [X] Document laptop installation.
-- [ ] Document Single Sign-On (SSO) setup for each app. Done so far: Immich, Audiobookshelf, Jellyfin. Kavita needs HTTPS first.
-- [ ] Add HTTPS support (needed for Kavita SSO and for internet access).
+- [ ] Document Single Sign-On (SSO) setup for each app. Done so far: Immich, Audiobookshelf, Jellyfin. Kavita and PeerTube need HTTPS first.
+- [ ] Add HTTPS support (needed for Kavita and PeerTube SSO, and for internet access).
 - [ ] Test Raspberry Pi and other ARM-based SBC deployments.
 - [ ] Validate desktop and mini PC deployments.
 - [X] Document backup and restore procedures.
