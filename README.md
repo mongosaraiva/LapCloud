@@ -176,7 +176,7 @@ Repeat for any other application. The table in [docs/install-laptop.md](docs/ins
 
 ### Single Sign-On
 
-See [docs/sso/README.md](docs/sso/README.md). The Immich guide is ready; the other apps will follow.
+See [docs/sso/README.md](docs/sso/README.md). There is a guide for each app. Immich, Audiobookshelf, Jellyfin and Navidrome are ready. Kavita and PeerTube need HTTPS first, and their pages explain why.
 
 ### Backup
 
@@ -202,7 +202,7 @@ See [docs/backup-restore.md](docs/backup-restore.md).
 - [X] Integrate Audiobookshelf, Kavita and Navidrome.
 - [X] Add Veloren dedicated server.
 - [X] Document laptop installation.
-- [ ] Document Single Sign-On (SSO) setup for each app. Done so far: Immich, Audiobookshelf, Jellyfin. Kavita and PeerTube need HTTPS first.
+- [X] Document Single Sign-On (SSO) setup for each app: Immich, Audiobookshelf, Jellyfin and Navidrome. Kavita and PeerTube need HTTPS first (see the next item).
 - [ ] Add HTTPS support (needed for Kavita and PeerTube SSO, and for internet access).
 - [ ] Test Raspberry Pi and other ARM-based SBC deployments.
 - [ ] Validate desktop and mini PC deployments.
