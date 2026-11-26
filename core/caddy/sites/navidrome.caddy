@@ -1,0 +1,3 @@
+http://music.{$LAPCLOUD_DOMAIN} {
+	reverse_proxy lapcloud-navidrome:4533
+}
