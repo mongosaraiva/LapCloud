@@ -1,0 +1,23 @@
+# Veloren: open-source multiplayer voxel RPG (dedicated server).
+# This is a game server, not a website, so it does NOT go through Caddy.
+# Players connect to <machine-ip>:14004 from the Veloren game client.
+
+services:
+  veloren:
+    image: registry.gitlab.com/veloren/veloren/server-cli:${VELOREN_VERSION:-weekly}
+    container_name: lapcloud-veloren
+    restart: unless-stopped
+    # The server reads admin commands from the console
+    stdin_open: true
+    tty: true
+    env_file: .env
+    ports:
+      - "${VELOREN_PORT:-14004}:14004"
+    volumes:
+      # World, characters and server settings
+      - ./data/userdata:/opt/userdata
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
