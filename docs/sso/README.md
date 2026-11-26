@@ -38,7 +38,7 @@ Authentik and the apps use the language of your browser. This guide uses the Eng
 | Immich | OAuth, built in | [immich.md](immich.md) (tested) |
 | Jellyfin | Plugin | not written yet |
 | PeerTube | Plugin | not written yet |
-| Audiobookshelf | OpenID, built in | not written yet |
+| Audiobookshelf | OpenID, built in | [audiobookshelf.md](audiobookshelf.md) (tested) |
 | Kavita | OpenID, built in | not written yet |
 | Navidrome | No OpenID. Needs proxy login | not written yet |
 | Veloren | No SSO | none |
@@ -49,5 +49,7 @@ The "SSO method" column is what the projects document, and it can change between
 
 - **The email must match.** Apps link your SSO login to an existing user by email. Use the same email in Authentik and in the app.
 - **Copy the Client ID and Secret after you create the provider**, not before. See the warning in [immich.md](immich.md).
+- **Leave the Grant Types as the wizard sets them.** **Authorization Code** must be ticked, or the login fails with `Invalid grant_type`.
+- **Authentik says the email is not verified.** Some apps refuse to link an account by an unverified email. Match by username in those apps.
 - **Home network, plain HTTP.** Some apps refuse a login address that is not HTTPS, and have a switch to allow it. Each guide says when.
 - **Keep one admin you can still log in with by password**, in every app, until you are sure SSO works. If Authentik is down, SSO logins fail.
