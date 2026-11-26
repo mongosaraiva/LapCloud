@@ -1,0 +1,3 @@
+http://photos.{$LAPCLOUD_DOMAIN} {
+	reverse_proxy lapcloud-immich-server:2283
+}
