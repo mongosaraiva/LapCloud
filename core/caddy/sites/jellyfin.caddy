@@ -1,0 +1,3 @@
+http://jellyfin.{$LAPCLOUD_DOMAIN} {
+	reverse_proxy lapcloud-jellyfin:8096
+}
