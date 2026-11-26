@@ -1,0 +1,23 @@
+# Kavita: ebooks, manga and comics.
+# Reached through Caddy at http://books.<LAPCLOUD_DOMAIN>
+
+services:
+  kavita:
+    image: jvmilazz0/kavita:${KAVITA_VERSION:-latest}
+    container_name: lapcloud-kavita
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ${BOOKS_DIR:-./data/books}:/books
+      - ./data/config:/kavita/config
+    networks:
+      - lapcloud
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  lapcloud:
+    external: true
