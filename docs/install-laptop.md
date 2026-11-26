@@ -95,7 +95,7 @@ cp .env.example .env     # edit .env: set AUTHENTIK_SECRET_KEY and the database 
 docker compose up -d
 ```
 
-The first start takes a few minutes (up to about three), while Authentik prepares its database. Then open `http://auth.lapcloud.lan/if/flow/initial-setup/` and create the admin user.
+The first start takes a few minutes (up to about three), while Authentik prepares its database. Then open `http://auth.lapcloud.lan/` and create the admin user. Use the root address, not `/if/flow/initial-setup/`: that page refuses a direct visit with "request denied". The form asks for an email, a password and the **Base URL** (leave it as `http://auth.lapcloud.lan`, with no path).
 
 ## 4. Start the apps you want
 
@@ -155,6 +155,10 @@ Your data stays in the app's `data/` folder, so stopping does not delete it.
 - **Caddy shows "unknown name"**: the name in the address is not the one in `LAPCLOUD_DOMAIN`.
 - **Port 80 is busy**: set `CADDY_HTTP_PORT` in `core/caddy/.env`.
 - **See what an app says**: `docker compose logs --tail 50` in its folder.
+
+## Single Sign-On
+
+To log in to your apps with one account, see [sso/README.md](sso/README.md).
 
 ## Back up your data
 
