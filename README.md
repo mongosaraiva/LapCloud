@@ -162,7 +162,7 @@ cp .env.example .env    # then edit .env and set the secret key and password
 docker compose up -d
 ```
 
-Open `http://auth.lapcloud.lan/if/flow/initial-setup/` to create the admin user.
+Open `http://auth.lapcloud.lan/` to create the admin user (use the root address, not `/if/flow/initial-setup/`).
 
 **5. Start the apps you want**
 
@@ -173,6 +173,10 @@ docker compose up -d
 ```
 
 Repeat for any other application. The table in [docs/install-laptop.md](docs/install-laptop.md) lists the extra step each app needs.
+
+### Single Sign-On
+
+See [docs/sso/README.md](docs/sso/README.md). The Immich guide is ready; the other apps will follow.
 
 ### Backup
 
@@ -198,7 +202,7 @@ See [docs/backup-restore.md](docs/backup-restore.md).
 - [X] Integrate Audiobookshelf, Kavita and Navidrome.
 - [X] Add Veloren dedicated server.
 - [X] Document laptop installation.
-- [ ] Document Single Sign-On (SSO) setup for each app.
+- [ ] Document Single Sign-On (SSO) setup for each app. Done so far: Immich.
 - [ ] Test Raspberry Pi and other ARM-based SBC deployments.
 - [ ] Validate desktop and mini PC deployments.
 - [X] Document backup and restore procedures.
