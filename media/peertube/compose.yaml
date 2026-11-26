@@ -1,0 +1,45 @@
+# PeerTube: video hosting and sharing.
+# Uses the shared Postgres (core/postgres) and its own Redis.
+# Run ./create-db.sh once before the first start.
+# Reached through Caddy at http://videos.<LAPCLOUD_DOMAIN>
+#
+# Home use only: this instance is not reachable from the internet, so it
+# cannot federate with other PeerTube servers (yet).
+
+name: lapcloud-peertube
+
+services:
+  peertube:
+    image: chocobozzz/peertube:${PEERTUBE_VERSION:-production-bookworm}
+    container_name: lapcloud-peertube
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data/peertube:/data
+      - ./data/config:/config
+    depends_on:
+      - redis
+    networks:
+      - default
+      - lapcloud
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  redis:
+    image: redis:8-alpine
+    container_name: lapcloud-peertube-redis
+    restart: unless-stopped
+    volumes:
+      - ./data/redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  lapcloud:
+    external: true
