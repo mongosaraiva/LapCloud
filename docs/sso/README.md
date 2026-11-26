@@ -36,7 +36,7 @@ Authentik and the apps use the language of your browser. This guide uses the Eng
 | App | SSO method | Guide |
 |---|---|---|
 | Immich | OAuth, built in | [immich.md](immich.md) (tested) |
-| Jellyfin | Plugin | not written yet |
+| Jellyfin | Third-party plugin | [jellyfin.md](jellyfin.md) (tested) |
 | PeerTube | Plugin | not written yet |
 | Audiobookshelf | OpenID, built in | [audiobookshelf.md](audiobookshelf.md) (tested) |
 | Kavita | OpenID, built in, but **needs HTTPS** | [kavita.md](kavita.md) (not possible yet) |
