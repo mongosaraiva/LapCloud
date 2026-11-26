@@ -1,0 +1,13 @@
+# Global options
+{
+	# Home network only: plain HTTP, no automatic certificates.
+	auto_https off
+}
+
+# One file per app. Adding an app = adding a file in ./sites/
+import /etc/caddy/sites/*.caddy
+
+# Any name that has no site file gets a clear 404.
+http:// {
+	respond "LapCloud: unknown name" 404
+}

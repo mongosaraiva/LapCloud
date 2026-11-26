@@ -1,0 +1,3 @@
+http://auth.{$LAPCLOUD_DOMAIN} {
+	reverse_proxy lapcloud-authentik-server:9000
+}
