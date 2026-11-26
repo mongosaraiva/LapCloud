@@ -16,7 +16,18 @@ services:
       - ./data/caddy-data:/data
       - ./data/caddy-config:/config
     networks:
-      - lapcloud
+      lapcloud:
+        # Other containers (for example Immich asking Authentik to log you in)
+        # must open the same names your browser uses. These aliases make Docker
+        # send those names to Caddy. Keep this list in step with ./sites/.
+        aliases:
+          - auth.${LAPCLOUD_DOMAIN:-lapcloud.lan}
+          - photos.${LAPCLOUD_DOMAIN:-lapcloud.lan}
+          - jellyfin.${LAPCLOUD_DOMAIN:-lapcloud.lan}
+          - videos.${LAPCLOUD_DOMAIN:-lapcloud.lan}
+          - audiobooks.${LAPCLOUD_DOMAIN:-lapcloud.lan}
+          - books.${LAPCLOUD_DOMAIN:-lapcloud.lan}
+          - music.${LAPCLOUD_DOMAIN:-lapcloud.lan}
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:2019/config/ || exit 1"]
       interval: 10s
