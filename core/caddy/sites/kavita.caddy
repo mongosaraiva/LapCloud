@@ -1,0 +1,3 @@
+http://books.{$LAPCLOUD_DOMAIN} {
+	reverse_proxy lapcloud-kavita:5000
+}

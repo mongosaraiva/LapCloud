@@ -1,0 +1,25 @@
+# Audiobookshelf: audiobooks and podcasts.
+# Reached through Caddy at http://audiobooks.<LAPCLOUD_DOMAIN>
+
+services:
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf:${AUDIOBOOKSHELF_VERSION:-latest}
+    container_name: lapcloud-audiobookshelf
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ${AUDIOBOOKS_DIR:-./data/audiobooks}:/audiobooks
+      - ${PODCASTS_DIR:-./data/podcasts}:/podcasts
+      - ./data/config:/config
+      - ./data/metadata:/metadata
+    networks:
+      - lapcloud
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  lapcloud:
+    external: true

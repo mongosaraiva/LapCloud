@@ -1,0 +1,24 @@
+# Navidrome: personal music streaming server.
+# Reached through Caddy at http://music.<LAPCLOUD_DOMAIN>
+
+services:
+  navidrome:
+    image: deluan/navidrome:${NAVIDROME_VERSION:-latest}
+    container_name: lapcloud-navidrome
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data/navidrome:/data
+      # Your music, read-only
+      - ${MUSIC_DIR:-./data/music}:/music:ro
+    networks:
+      - lapcloud
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  lapcloud:
+    external: true
