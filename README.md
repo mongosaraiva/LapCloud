@@ -101,8 +101,6 @@ LapCloud/
 │   └── veloren/
 │       └── compose.yaml
 │
-├── archive/        (old step-by-step guides)
-├── .gitignore
 ├── LICENSE
 └── README.md
 ```
