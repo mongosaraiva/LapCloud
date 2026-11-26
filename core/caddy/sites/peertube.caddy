@@ -1,0 +1,3 @@
+http://videos.{$LAPCLOUD_DOMAIN} {
+	reverse_proxy lapcloud-peertube:9000
+}
