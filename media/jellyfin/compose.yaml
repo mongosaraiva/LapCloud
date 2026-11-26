@@ -1,0 +1,27 @@
+# Jellyfin: movies, TV shows and media streaming.
+# Reached through Caddy at http://jellyfin.<LAPCLOUD_DOMAIN>
+# Note: automatic discovery on the home network (DLNA, UDP 1900/7359) is not
+# enabled, because it needs host networking. Add the server by address instead.
+
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:${JELLYFIN_VERSION:-latest}
+    container_name: lapcloud-jellyfin
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data/config:/config
+      - ./data/cache:/cache
+      # Your media library, read-only
+      - ${MEDIA_DIR:-./data/media}:/media:ro
+    networks:
+      - lapcloud
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  lapcloud:
+    external: true
