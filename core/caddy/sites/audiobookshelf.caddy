@@ -1,0 +1,3 @@
+http://audiobooks.{$LAPCLOUD_DOMAIN} {
+	reverse_proxy lapcloud-audiobookshelf:80
+}
